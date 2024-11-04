@@ -1,0 +1,61 @@
+import csv
+from datetime import datetime
+
+# CSVファイルのパス
+file_path = "diary_log.csv"
+
+# CSVファイルが存在しない場合、ヘッダーを追加
+def create_csv_if_not_exists():
+    try:
+        with open(file_path, mode="x", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Mood", "Study Log", "Thoughts"])
+    except FileExistsError:
+        pass
+
+# 日記の入力を記録する関数
+def add_diary_entry():
+    date = datetime.now().strftime("%Y-%m-%d")
+    mood = input("今日の気分はどうですか？: ")
+    study_log = input("今日の学習内容は何ですか？: ")
+    thoughts = input("今日の感想や気づきはありますか？: ")
+
+    with open(file_path, mode="a", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow([date, mood, study_log, thoughts])
+    print("\n日記が記録されました！\n")
+
+# 過去の日記を表示する関数
+def view_diary_entries():
+    try:
+        with open(file_path, mode="r", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                print(" | ".join(row))
+    except FileNotFoundError:
+        print("日記ファイルが見つかりません。")
+
+# メインプログラム
+def main():
+    create_csv_if_not_exists()
+    
+    while True:
+        print("1: 日記を追加する")
+        print("2: 過去の日記を表示する")
+        print("3: 終了する")
+        choice = input("選択してください (1/2/3): ")
+
+        if choice == "1":
+            add_diary_entry()
+        elif choice == "2":
+            view_diary_entries()
+        elif choice == "3":
+            print("終了します。")
+            break
+        else:
+            print("無効な選択です。再度お試しください。")
+
+# アプリを起動1
+
+if __name__ == "__main__":
+    main()
